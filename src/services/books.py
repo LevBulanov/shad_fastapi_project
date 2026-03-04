@@ -4,7 +4,7 @@ __all__ = ["BookService"]
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.models.books import Book
+from src.models import BaseModel, Seller, Book #?
 from src.schemas.books import IncomingBook, PatchBook, ReturnedBook
 
 
