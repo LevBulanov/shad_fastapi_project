@@ -43,6 +43,7 @@ class IncomingBook(BaseBook):
 class ReturnedBook(BaseBook):  # {"id": 1, "title": "Clean Code", ....}
     id: int
     pages: int
+    seller_id: int
 
 
 # Класс для возврата массива объектов "Книга"

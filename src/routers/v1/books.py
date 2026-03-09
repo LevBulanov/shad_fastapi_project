@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, TYPE_CHECKING
 
 from fastapi import APIRouter, Depends, Response, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -6,6 +6,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.configurations.database import get_async_session
 from src.schemas import IncomingBook, PatchBook, ReturnedAllBooks, ReturnedBook
 from src.services import BookService
+from src.dependency.dependencies import get_current_seller
+
+
+from src.models import Seller
 
 books_router = APIRouter(prefix="/books", tags=["books"])
 
@@ -19,8 +23,8 @@ async def get_all_books(session: DBSession):
 
 
 @books_router.post("/", response_model=ReturnedBook, status_code=status.HTTP_201_CREATED)
-async def create_book(book: IncomingBook, session: DBSession):
-    new_book = await BookService(session).add_book(book)
+async def create_book(book: IncomingBook, session: DBSession,  seller: Seller = Depends(get_current_seller)):
+    new_book = await BookService(session).add_book(book, seller.id)
 
     return new_book
 
@@ -45,12 +49,17 @@ async def delete_book(book_id: int, session: DBSession):
 
 
 @books_router.put("/{book_id}", response_model=ReturnedBook)
-async def update_book(book_id: int, new_book_data: ReturnedBook, session: DBSession):
+async def update_book(book_id: int, new_book_data: ReturnedBook, session: DBSession, seller: Seller = Depends(get_current_seller)):
 
-    updated_book = await BookService(session).update_book(book_id, new_book_data)
+    updated_book = await BookService(session).get_single_book(book_id)
 
     if not updated_book:
         return Response(status_code=status.HTTP_404_NOT_FOUND)
+
+    if updated_book.seller_id != seller.id:
+        return Response(status_code=status.HTTP_403_FORBIDDEN)
+
+    updated_book = await BookService(session).update_book(updated_book, new_book_data)
 
     return updated_book
 

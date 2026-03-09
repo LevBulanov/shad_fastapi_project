@@ -29,20 +29,6 @@ async_test_engine = create_async_engine(
 # Создаем фабрику сессий для тестового движка.
 async_test_session = async_sessionmaker(async_test_engine, expire_on_commit=False, autoflush=False)
 
-
-# Получаем цикл событий для асинхорнного потока выполнения задач.
-@pytest_asyncio.fixture(scope="session")
-def event_loop() -> Generator:
-    """Create an instance of the default event loop for each test case."""
-    # loop = asyncio.new_event_loop()  # На разных версиях питона и разных ОС срабатывает по разному
-    loop = asyncio.get_event_loop()
-    yield loop
-    try:
-        loop.close()
-    except Exception as e:
-        ic(e)
-
-
 # Создаем таблицы в тестовой БД. Предварительно удаляя старые.
 @pytest_asyncio.fixture(scope="session", autouse=True)
 async def create_tables() -> None:
@@ -88,3 +74,37 @@ async def async_client(test_app):
     transport = httpx.ASGITransport(app=test_app)
     async with httpx.AsyncClient(transport=transport, base_url="http://127.0.0.1:8000") as test_client:
         yield test_client
+
+
+@pytest_asyncio.fixture
+async def seller(async_client):
+    response = await async_client.post(
+        "/api/v1/seller/",
+        json={
+            "first_name": "Test",
+            "last_name": "Seller",
+            "email": "test@test.com",
+            "password": "123456"
+        }
+    )
+    return response.json()
+
+
+@pytest_asyncio.fixture
+async def auth_token(async_client, seller):
+
+    response = await async_client.post(
+        "/api/v1/token/",
+        json={
+            "email": "test@test.com",
+            "password": "123456"
+        }
+    )
+
+    data = response.json()
+    return data["access_token"]
+
+
+@pytest.fixture
+def auth_headers(auth_token):
+    return {"Authorization": f"Bearer {auth_token}"}

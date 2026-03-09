@@ -13,7 +13,7 @@ class Book(BaseModel):
     __tablename__ = "books_table"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    author_id: Mapped[int] = mapped_column(ForeignKey("sellers_table.id"))
+    seller_id: Mapped[int] = mapped_column(ForeignKey("sellers_table.id"))
     title: Mapped[str] = mapped_column(String(100), nullable=False)
     author: Mapped[str] = mapped_column(String(50), nullable=False)
     year: Mapped[int] = mapped_column(nullable=True)

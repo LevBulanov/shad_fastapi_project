@@ -16,6 +16,7 @@ class Seller(BaseModel):
     first_name: Mapped[str] = mapped_column(String(100), nullable=False)
     last_name: Mapped[str] = mapped_column(String(100), nullable=False)
     email: Mapped[str] = mapped_column(String(100), nullable=False)
-    password: Mapped[int] = mapped_column(nullable=False)
+    password: Mapped[str] = mapped_column(String, nullable=False)
 
-    books: Mapped[List["Book"]] = relationship(back_populates='seller')
+    books: Mapped[List["Book"]] = relationship(back_populates='seller',
+                                               cascade='all, delete-orphan', lazy="selectin")
