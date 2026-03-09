@@ -2,14 +2,6 @@ from pydantic import BaseModel
 
 from .books import ReturnedBook
 
-__all__ = [
-    "CreateSeller",
-    "ReadSeller",
-    "ReadSellerAndBooks",
-    "ReadAllSellers",
-    "PatchSeller",
-    "UpdateSeller"
-]
 
 class BaseSeller(BaseModel):
     first_name: str

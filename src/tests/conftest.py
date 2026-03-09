@@ -2,14 +2,10 @@
 Фикстуры - это особые функции, которые не надо импортировать явно.
 Сам пайтест подтягивает их по имени из файла conftest.py
 """
-
-import asyncio
-from typing import Generator
-
 import httpx
 import pytest
 import pytest_asyncio
-from icecream import ic
+
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from src.configurations.settings import settings

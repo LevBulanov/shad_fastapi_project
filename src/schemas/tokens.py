@@ -1,10 +1,5 @@
 from pydantic import BaseModel
 
-__all__ = [
-    "CreateToken",
-    "ReturnToken",
-]
-
 class CreateToken(BaseModel):
     email: str
     password: str

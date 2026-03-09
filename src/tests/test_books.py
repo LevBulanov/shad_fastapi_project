@@ -57,7 +57,7 @@ async def test_create_book_with_old_year(async_client, auth_headers):
         headers=auth_headers,
     )
 
-    assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+    assert response.status_code == status.HTTP_422_UNPROCESSABLE_CONTENT
 
 
 # GET BOOKS

@@ -1,5 +1,3 @@
-__all__ = ["TokenService"]
-
 import jwt
 from datetime import datetime, timedelta, timezone
 
