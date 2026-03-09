@@ -16,6 +16,7 @@ from src.configurations.settings import settings
 from src.models import books  # noqa
 from src.models.base import BaseModel
 from src.models.books import Book  # noqa F401
+from sqlalchemy.pool import NullPool
 
 # Переопределяем движок для запуска тестов и подключаем его к тестовой базе.
 # Это решает проблему с сохранностью данных в основной базе приложения.
@@ -24,6 +25,7 @@ from src.models.books import Book  # noqa F401
 async_test_engine = create_async_engine(
     settings.database_test_url,
     echo=True,
+    poolclass=NullPool
 )
 
 # Создаем фабрику сессий для тестового движка.
