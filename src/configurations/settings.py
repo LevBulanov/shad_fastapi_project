@@ -10,6 +10,8 @@ class Settings(BaseSettings):
     db_password: str
     db_test_name: str = "fastapi_project_test_db"
     max_connection_count: int = 10
+    algorithm: str
+    secret_key: str
 
     @property
     def database_url(self) -> str:
